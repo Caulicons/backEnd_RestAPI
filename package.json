@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "node ace serve --watch",
-    "production": "yarn install && yarn build && cd build && yarn install --production && yarn start",
+    "production": "npm install && npm run build && cd build && npm install --production && npm run start",
     "build": "node ace build --production",
     "start": "node server.js",
     "test": "node ace test",
