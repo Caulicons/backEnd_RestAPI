@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "node ace serve --watch",
-    "production": "yarn install && yarn build && cd build && yarn install --production && node server.js",
+    "production": "node build/server.js",
     "build": "node ace build --production",
     "start": "node server.js",
     "test": "node ace test",
@@ -56,8 +56,8 @@
     "youch-terminal": "^2.2.0"
   },
   "dependencies": {
-    "@adonisjs/assembler": "^5.9.5",
     "@adonisjs/ace": "^5.0.8",
+    "@adonisjs/assembler": "^5.9.5",
     "@adonisjs/core": "^5.9.0",
     "@adonisjs/repl": "^3.1.11",
     "@prisma/client": "^4.14.1",
