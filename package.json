@@ -4,14 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "node ace serve --watch",
-    "production": "node build/server.js",
     "build": "node ace build --production",
     "start": "node server.js",
     "test": "node ace test",
     "lint": "eslint . --ext=.ts",
-    "format": "prettier --write .",
-    "commandBuild": "yarn && yarn build && npx prisma migrate deploy",
-    "commandStart": "node build/server.js"
+    "format": "prettier --write ."
   },
   "eslintConfig": {
     "extends": [

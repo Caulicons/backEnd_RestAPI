@@ -22,7 +22,7 @@ import Route from '@ioc:Adonis/Core/Route'
 
 Route.group(() => {
   Route.get('/', async () => {
-    return { opa: 'you beatty' }
+    return { opa: 'you beatty', environment: process.env.NODE_ENV }
   })
 
   Route.resource('videos', 'VideosController').apiOnly()
