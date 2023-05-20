@@ -2,9 +2,12 @@
   "name": "RestAPI_movies",
   "version": "1.0.0",
   "private": true,
+  "engines": {
+    "node": "18.x"
+  },
   "scripts": {
     "dev": "node ace serve --watch",
-    "production": "yarn install && yarn build && cd build && yarn install --production && yarn start",
+    "production": "yarn install && yarn build && cd build && yarn install --production && node server.js",
     "build": "node ace build --production",
     "start": "node server.js",
     "test": "node ace test",
