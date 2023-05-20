@@ -9,7 +9,9 @@
     "start": "node server.js",
     "test": "node ace test",
     "lint": "eslint . --ext=.ts",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "commandBuild": "yarn && npx prisma generate && yarn build && npx prisma migrate deploy",
+    "commandStart": "node build/server.js"
   },
   "eslintConfig": {
     "extends": [
