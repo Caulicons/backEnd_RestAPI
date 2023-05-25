@@ -78,7 +78,7 @@ export default class VideosController {
 
   public async destroy({ params, response }: HttpContextContract) {
     try {
-      const video = await prisma.video.delete({
+      await prisma.video.delete({
         where: { id: params.id },
       })
 
