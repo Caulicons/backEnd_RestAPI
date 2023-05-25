@@ -5,13 +5,12 @@ const prisma = new PrismaClient()
 
 export default class VideosController {
   public async index({ response }: HttpContextContract) {
-    const videos = await prisma.videos.findMany()
-
+    const videos = await prisma.video.findMany()
     return response.status(200).json(videos)
   }
 
   public async show({ params, response }: HttpContextContract) {
-    const video = await prisma.videos.findUnique({
+    const video = await prisma.video.findUnique({
       where: { id: params.id },
     })
 
@@ -39,7 +38,7 @@ export default class VideosController {
 
     const videoValidate = createdVideoSchema.parse(request.body())
 
-    const videos = await prisma.videos.create({
+    const videos = await prisma.video.create({
       data: videoValidate,
     })
 
@@ -69,7 +68,7 @@ export default class VideosController {
 
     const videoValidate = updatedVideoSchema.parse(request.body())
 
-    const video = await prisma.videos.update({
+    const video = await prisma.video.update({
       where: { id: params.id },
       data: videoValidate,
     })
@@ -79,7 +78,7 @@ export default class VideosController {
 
   public async destroy({ params, response }: HttpContextContract) {
     try {
-      await prisma.videos.delete({
+      const video = await prisma.video.delete({
         where: { id: params.id },
       })
 
