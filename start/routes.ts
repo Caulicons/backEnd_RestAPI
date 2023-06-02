@@ -18,12 +18,16 @@
 |
 */
 
+import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+
 import Route from '@ioc:Adonis/Core/Route'
 
-Route.group(() => {
-  Route.get('/', async () => {
-    return { opa: 'you beatty', environment: process.env.NODE_ENV }
-  })
+import './routes/videosRoutes'
+import './routes/categoriesRoutes'
 
-  Route.resource('videos', 'VideosController').apiOnly()
+Route.group(() => {
+  /* see if the router worked */
+  Route.get('/', async ({ response }: HttpContextContract) => {
+    return response.status(200).json({ opa: 'you beatty', environment: process.env.NODE_ENV })
+  })
 }).prefix('/api')
