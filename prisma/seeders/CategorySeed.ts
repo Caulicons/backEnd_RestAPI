@@ -3,44 +3,72 @@ import { prisma, PrismaSeederBase } from '@ioc:Adonis/Addons/Prisma'
 const categories = [
   {
     id: '1',
-    title: 'LIVRE',
+    name: 'LIVRE',
     color: 'green',
   },
   {
-    title: 'Action',
+    name: 'Action',
     color: 'gray',
   },
   {
-    title: 'Comedy',
+    name: 'Comedy',
     color: 'blue',
   },
   {
-    title: 'Horror',
+    name: 'Horror',
     color: 'red',
   },
   {
-    title: 'Romance',
+    name: 'Romance',
     color: 'yellow',
   },
   {
-    title: 'Thriller',
+    name: 'Thriller',
     color: 'purple',
   },
   {
-    title: 'Suspense',
+    name: 'Suspense',
     color: 'orange',
   },
   {
-    title: 'Fantasy',
+    name: 'Fantasy',
     color: 'pink',
   },
   {
-    title: 'Mystery',
+    name: 'Mystery',
     color: 'black',
   },
   {
-    title: 'Drama',
+    name: 'Drama',
     color: 'brown',
+  },
+  {
+    name: 'Crime',
+    color: 'coral',
+  },
+  {
+    name: 'Documentary',
+    color: 'indigo',
+  },
+  {
+    name: 'Animation',
+    color: 'crimson',
+  },
+  {
+    name: 'Musical',
+    color: 'azure',
+  },
+  {
+    name: 'War',
+    color: 'marron',
+  },
+  {
+    name: 'History',
+    color: 'olive',
+  },
+  {
+    name: 'Western',
+    color: 'teal',
   },
 ]
 
@@ -50,10 +78,10 @@ export default class CategorySeeder extends PrismaSeederBase {
   public async run() {
     const promises = categories.map(async (category) => {
       return prisma.category.upsert({
-        where: { title: category.title },
+        where: { name: category.name },
         update: {},
         create: {
-          title: category.title,
+          name: category.name,
           color: category.color,
         },
       })
@@ -62,7 +90,7 @@ export default class CategorySeeder extends PrismaSeederBase {
     await Promise.all(promises)
 
     await prisma.category.update({
-      where: { title: 'LIVRE' },
+      where: { name: 'LIVRE' },
       data: { id: '1' },
     })
   }

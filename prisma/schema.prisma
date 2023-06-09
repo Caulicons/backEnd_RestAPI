@@ -7,21 +7,21 @@ datasource db {
   url      = env("POSTGRES_PRISMA_URL")
 }
 
-model Video {
+model Movie {
   id          String     @id @default(uuid())
   title       String     @unique
   description String
   url         String
   categories  Category[]
 
-  @@map("Videos")
+  @@map("Movies")
 }
 
 model Category {
   id     String  @id @default(uuid())
-  title  String  @unique
+  name   String  @unique
   color  String
-  videos Video[]
+  videos Movie[]
 
   @@map("Categories")
 }

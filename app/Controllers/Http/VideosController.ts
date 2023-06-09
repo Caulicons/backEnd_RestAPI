@@ -2,18 +2,60 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { z } from 'zod'
 import { PrismaClient } from '@prisma/client'
+import ControllersUtils from '../../../utils/controller'
 const prisma = new PrismaClient()
 
 export default class VideosController {
-  public async index(ctx: HttpContextContract) {
-    if (ctx.request.qs()) return this.getVideoByQueryParameters(ctx)
+  public async index({ request, response }: HttpContextContract) {
+    let { page, ...searchParams } = request.qs()
 
-    const videos = await prisma.video.findMany({ include: { categories: true } })
-    return ctx.response.status(200).json(videos)
+    for (const [key, value] of Object.entries(searchParams)) {
+      searchParams = {
+        ...searchParams,
+        [key]: {
+          mode: 'insensitive',
+          contains: value,
+        },
+      }
+    }
+
+    if (page) {
+      const baseUrl = ControllersUtils.getBaseURL()
+      const skip = (page - 1) * 5
+
+      const videos = await prisma.movie.findMany({
+        skip,
+        take: 5,
+        where: { ...searchParams },
+        include: { categories: true },
+      })
+
+      if (!videos.length) return response.status(404).json({ message: 'Video not found' })
+
+      const previous = skip === 0 ? false : `${baseUrl}/videos/?page=${page - 1}`
+      const next = videos.length < 5 ? false : `${baseUrl}/videos/?page=${Number(page) + 1}`
+
+      return response.status(200).json({
+        videos,
+        previous,
+        next,
+      })
+    }
+
+    const videos = await prisma.movie.findMany({
+      where: { ...searchParams },
+      include: { categories: true },
+    })
+
+    if (!videos.length) return response.status(404).json({ message: 'Video not found' })
+
+    return response.status(200).json({
+      video: videos,
+    })
   }
 
   public async show({ params, response }: HttpContextContract) {
-    const video = await prisma.video.findUnique({
+    const video = await prisma.movie.findUnique({
       where: { id: params.id },
       include: {
         categories: true,
@@ -45,15 +87,15 @@ export default class VideosController {
 
     const videoValidate = createdVideoSchema.parse(request.body())
 
-    const videos = await prisma.video.create({
+    const videos = await prisma.movie.create({
       data: {
         ...videoValidate,
         categories: videoValidate.categories
           ? { connect: videoValidate.categories }
           : {
               connectOrCreate: {
-                where: { title: 'LIVRE' },
-                create: { title: 'LIVRE', color: 'green' },
+                where: { name: 'LIVRE' },
+                create: { name: 'LIVRE', color: 'green' },
               },
             },
       },
@@ -81,7 +123,9 @@ export default class VideosController {
         .nonempty({ message: 'URL is required' })
         .url({ message: 'Invalid URL' })
         .optional(),
-      categories: z.array(z.object({ id: z.string() })).optional(),
+      categories: z
+        .array(z.object({ id: z.string().optional(), title: z.string().optional() }))
+        .optional(),
     })
 
     const videoValidate = updatedVideoSchema.parse(request.body())
@@ -102,13 +146,13 @@ export default class VideosController {
       return categoryVerification
     }
 
-    const video = await prisma.video
+    const video = await prisma.movie
       .update({
         where: { id: params.id },
         data: {
           ...videoValidate,
           categories: {
-            set: await customErrorCategories(),
+            set: videoValidate.categories,
           },
         },
       })
@@ -122,7 +166,7 @@ export default class VideosController {
 
   public async destroy({ params, response }: HttpContextContract) {
     try {
-      await prisma.video.delete({
+      await prisma.movie.delete({
         where: { id: params.id },
       })
 
@@ -130,16 +174,5 @@ export default class VideosController {
     } catch (error) {
       return response.status(404).json({ message: 'Video not found' })
     }
-  }
-
-  private async getVideoByQueryParameters({ response, request }: HttpContextContract) {
-    const video = await prisma.video.findMany({
-      where: { ...request.qs() },
-      include: { categories: true },
-    })
-
-    if (!video.length) return response.status(404).json({ message: 'Video not found' })
-
-    return response.status(200).json(video)
   }
 }

@@ -1,16 +1,34 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { PrismaClient } from '@prisma/client'
+import ControllersUtils from '../../../utils/controller'
 import { z } from 'zod'
 const prisma = new PrismaClient()
 
 export default class CategoriesController {
-  public async index({ response }: HttpContextContract) {
+  public async index({ response, request }: HttpContextContract) {
+    const baseUrl = ControllersUtils.getBaseURL()
+    const { page } = request.qs()
+    const skip = (page - 1) * 5
+    const take = 5
+
     const categories = await prisma.category.findMany({
+      skip,
+      take,
       include: {
         videos: true,
       },
     })
-    return response.status(200).json(categories)
+
+    if (!categories.length) return response.status(404).json({ message: 'Categories not found' })
+
+    const previous = skip === 0 ? false : `${baseUrl}/categories/?page=${page - 1}`
+    const next = categories.length < 5 ? false : `${baseUrl}/categories/?page=${Number(page) + 1}`
+
+    return response.status(200).json({
+      categories,
+      previous,
+      next,
+    })
   }
 
   public async show({ params, response }: HttpContextContract) {
@@ -27,10 +45,9 @@ export default class CategoriesController {
 
     return response.status(200).json(category)
   }
-
   public async store({ request, response }: HttpContextContract) {
     const createdCategorySchema = z.object({
-      title: z
+      name: z
         .string()
         .nonempty({ message: 'Title is required' })
         .min(1, { message: 'Title must have at least one character' })
