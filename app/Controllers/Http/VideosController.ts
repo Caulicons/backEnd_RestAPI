@@ -70,7 +70,7 @@ export default class VideosController {
   }
 
   public async store({ request, response }: HttpContextContract) {
-    const createdVideoSchema = z.object({
+    const videoSchema = z.object({
       title: z
         .string()
         .nonempty({ message: 'Title is required' })
@@ -85,7 +85,7 @@ export default class VideosController {
       categories: z.array(z.object({ id: z.string() })).optional(),
     })
 
-    const videoValidate = createdVideoSchema.parse(request.body())
+    const videoValidate = videoSchema.parse(request.body())
 
     const videos = await prisma.movie.create({
       data: {
@@ -130,7 +130,7 @@ export default class VideosController {
 
     const videoValidate = updatedVideoSchema.parse(request.body())
 
-    const customErrorCategories = async () => {
+/*     const customErrorCategories = async () => {
       if (!videoValidate.categories) return
 
       const categoryVerification = await Promise.all(
@@ -144,7 +144,7 @@ export default class VideosController {
       )
 
       return categoryVerification
-    }
+    } */
 
     const video = await prisma.movie
       .update({
