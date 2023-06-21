@@ -15,37 +15,63 @@ export default class UsersController {
 
     const validatedUser = userSchema.parse(request.body())
 
-    // check if the user already exists
-    // Validate if user exist in our database
-    /* const isOldUser = await prisma.user.findUnique({
+    const isOldUser = await prisma.user.findUnique({
       where: { email: validatedUser.email },
     })
 
-    if(isOldUser) {
+    if (isOldUser) {
       return response.status(400).json({ message: 'User already exists' })
     }
-    */
 
     const encryptedPassword = await bcrypt.hash(validatedUser.password, 10)
 
-    // create new user
-    /* const user = await prisma.user.create({
+    const userData = await prisma.user.create({
       data: {
         name: validatedUser.name,
         email: validatedUser.email.toLowerCase(),
         password: encryptedPassword,
       },
-      const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
-      expiresIn: '30s',
     })
 
-    user.token = token
+    const { JWT_SECRET } = process.env
 
-    res.status(201).json({
-      user
+    const token = jwt.sign({ id: userData.id, email: userData.email }, JWT_SECRET as string, {
+      expiresIn: '15m',
     })
-    }) */
 
+    const user = { ...userData, token }
 
+    response.status(201).json(user)
+  }
+
+  public async login({ request, response }: HttpContextContract) {
+    const userSchema = z.object({
+      email: z.string(),
+      password: z.string(),
+    })
+
+    const validatedUser = userSchema.parse(request.body())
+
+    const user = await prisma.user.findUnique({
+      where: { email: validatedUser.email },
+    })
+
+    if (!user) {
+      return response.status(400).json({ message: 'User not found' })
+    }
+
+    if (!(await bcrypt.compare(validatedUser.password, user.password))) {
+      return response.status(400).json({ message: 'Invalid password' })
+    }
+
+    const { JWT_SECRET } = process.env
+
+    const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET as string, {
+      expiresIn: '15m',
+    })
+
+    const userWithToken = { ...user, token }
+
+    response.status(200).json(userWithToken)
   }
 }

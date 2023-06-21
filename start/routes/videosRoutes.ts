@@ -1,5 +1,8 @@
 import Route from '@ioc:Adonis/Core/Route'
 
 Route.group(() => {
-  Route.resource('videos', 'VideosController').apiOnly()
+  Route.get('/videos/free', 'VideosController.free')
+  Route.resource('videos', 'VideosController')
+    .middleware({ '*': ['auth'] })
+    .apiOnly()
 }).prefix('/api')

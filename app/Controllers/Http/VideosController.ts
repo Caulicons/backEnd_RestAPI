@@ -2,7 +2,7 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { z } from 'zod'
 import { PrismaClient } from '@prisma/client'
-import ControllersUtils from '../../../utils/controller'
+import ControllersUtils from '../../../utils/controllerUtils'
 const prisma = new PrismaClient()
 
 export default class VideosController {
@@ -130,7 +130,7 @@ export default class VideosController {
 
     const videoValidate = updatedVideoSchema.parse(request.body())
 
-/*     const customErrorCategories = async () => {
+    /*     const customErrorCategories = async () => {
       if (!videoValidate.categories) return
 
       const categoryVerification = await Promise.all(
@@ -174,5 +174,15 @@ export default class VideosController {
     } catch (error) {
       return response.status(404).json({ message: 'Video not found' })
     }
+  }
+
+  public async free({ response }: HttpContextContract) {
+    const freeVideos = await prisma.movie.findMany({
+      where: {
+        free: true,
+      },
+    })
+
+    return response.status(200).json(freeVideos)
   }
 }

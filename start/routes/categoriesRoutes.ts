@@ -4,4 +4,6 @@ Route.group(() => {
   Route.resource('categories', 'CategoriesController').apiOnly()
 
   Route.get('/categories/:id/videos', 'CategoriesController.listVideosByCategoryID')
-}).prefix('/api')
+})
+  .prefix('/api')
+  .middleware('auth')

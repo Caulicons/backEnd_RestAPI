@@ -1,6 +1,6 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { PrismaClient } from '@prisma/client'
-import ControllersUtils from '../../../utils/controller'
+import ControllersUtils from '../../../utils/controllerUtils'
 import { z } from 'zod'
 const prisma = new PrismaClient()
 

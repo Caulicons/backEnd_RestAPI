@@ -24,9 +24,10 @@ import Route from '@ioc:Adonis/Core/Route'
 
 import './routes/videosRoutes'
 import './routes/categoriesRoutes'
+import './routes/userRoutes'
 
 Route.group(() => {
-  /* see if the router worked */
+  /* check if the router worked */
   Route.get('/', async ({ response }: HttpContextContract) => {
     return response.status(200).json({ opa: 'you beatty', environment: process.env.NODE_ENV })
   })

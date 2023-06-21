@@ -6,35 +6,41 @@ const movies = [
     description: 'test',
     url: 'test',
     categories: [{ id: '1' }],
+    free: true,
   },
   {
     title: 'The Godfather',
     description:
       'Don Vito Corleone, head of a mafia family, decides to hand over his empire to his youngest son Michael. However, his decision unintentionally puts the lives of his loved ones in grave danger.',
     url: 'https://www.youtube.com/watch?v=QH2-TGUlwu4',
+    free: true,
   },
   {
     title: 'The Godfather: Part II',
     description: 'The early life and career of Vito Corleone in 1920s New York City.',
     url: 'https://www.youtube.com/watch?v=QH2-TGUlwu4',
+    free: true,
   },
   {
     title: 'The Godfather: Part III',
     description:
       "When realisation strikes Micheal Corleone, he takes a tough call and decides to end his family's criminal empire. He chooses his nephew as his successor, however, the mob refuses to let him go.",
     url: 'https://www.youtube.com/watch?v=QH2-TGUlwu4',
+    free: true,
   },
   {
     title: 'Moonlight',
     description:
       "Chiron, a young African-American boy, finds guidance in Juan, a drug dealer, who teaches him to carve his own path. As he grows up in Miami, Juan's advice leaves a lasting impression on him.",
     url: 'https://www.youtube.com/watch?v=QH2-TGUlwu4',
+    free: true,
   },
   {
     title: 'Roma',
     description:
       "Cleo is one of two domestic workers who help Antonio and Sofía take care of their four children in 1970s Mexico City. Complications soon arise when Antonio suddenly runs away with his mistress and Cleo finds out that she's pregnant. When Sofía decides to take the kids on vacation, she invites Cleo for a much-needed getaway to clear her mind and bond with the family.",
     url: 'https://www.youtube.com/watch?v=QH2-TGUlwu4',
+    free: true,
   },
   {
     title: 'Hereditary',
@@ -177,6 +183,7 @@ export default class VideoSeeder extends PrismaSeederBase {
           title: movie.title,
           description: movie.description,
           url: movie.url,
+          free: movie.free,
           categories: { connect: movie.categories },
         },
       })

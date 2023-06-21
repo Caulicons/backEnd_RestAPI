@@ -2,4 +2,4 @@
  * Put all seeders filename here. It will be executed based on the order
  */
 
-export default ['CategorySeed', 'VideoSeed']
+export default ['CategorySeed', 'VideoSeed', 'UserSeed']
