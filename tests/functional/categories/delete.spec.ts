@@ -6,7 +6,7 @@ test.group('CATEGORIES - DELETE', () => {
   test('DELETE /categories/:id', async ({ client }) => {
     const categoryToDelete = await prisma.category.create({
       data: {
-        title: 'test deleted',
+        name: 'test deleted',
         color: 'to testes deleted',
       },
     })

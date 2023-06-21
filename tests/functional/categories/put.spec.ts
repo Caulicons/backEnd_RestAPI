@@ -24,7 +24,7 @@ test.group('CATEGORIES - PUT', () => {
       await prisma.category.update({
         where: { id: response.body().data.id },
         data: {
-          title: 'LIVRE',
+          name: 'LIVRE',
           color: 'green',
         },
       })

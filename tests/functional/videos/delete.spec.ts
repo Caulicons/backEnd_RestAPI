@@ -4,7 +4,7 @@ const prisma = new PrismaClient()
 
 test.group('VIDEO - DELETE', () => {
   test('DELETE /videos/:id', async ({ client }) => {
-    const videoToDelete = await prisma.video.create({
+    const videoToDelete = await prisma.movie.create({
       data: {
         title: 'test deleted',
         description: 'to testes deleted',

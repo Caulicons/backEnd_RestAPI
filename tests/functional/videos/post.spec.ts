@@ -18,7 +18,7 @@ test.group('VIDEO - POST', () => {
     })
 
     if (response.status() === 201) {
-      await prisma.video.delete({ where: { id: response.body().id } })
+      await prisma.movie.delete({ where: { id: response.body().id } })
     }
   })
 })

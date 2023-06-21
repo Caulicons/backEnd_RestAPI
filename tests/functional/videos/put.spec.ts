@@ -21,7 +21,7 @@ test.group('VIDEO - PUT', () => {
     })
 
     if (response.status() === 201) {
-      await prisma.video.update({
+      await prisma.movie.update({
         where: { id: response.body().id },
         data: {
           title: 'The Godfather',
