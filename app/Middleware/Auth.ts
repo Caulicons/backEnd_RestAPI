@@ -1,4 +1,5 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import Env from '@ioc:Adonis/Core/Env'
 import jwt from 'jsonwebtoken'
 
 export default class Auth {
@@ -10,7 +11,7 @@ export default class Auth {
     }
 
     try {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET as string)
+      const decoded = jwt.verify(token, Env.get('APP_KEY'))
       /*       console.log('decoded', decoded)
       console.log('type decoded', typeof decoded) */
       request.all().user = decoded

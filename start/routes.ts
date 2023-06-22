@@ -19,6 +19,7 @@
 */
 
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import Env from '@ioc:Adonis/Core/Env'
 
 import Route from '@ioc:Adonis/Core/Route'
 
@@ -29,6 +30,6 @@ import './routes/userRoutes'
 Route.group(() => {
   /* check if the router worked */
   Route.get('/', async ({ response }: HttpContextContract) => {
-    return response.status(200).json({ opa: 'you beatty', environment: process.env.NODE_ENV })
+    return response.status(200).json({ opa: 'you beatty', environment: Env.get('NODE_ENV') })
   })
 }).prefix('/api')

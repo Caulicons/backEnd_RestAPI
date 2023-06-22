@@ -1,4 +1,5 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import Env from '@ioc:Adonis/Core/Env'
 import { z } from 'zod'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
@@ -33,9 +34,7 @@ export default class UsersController {
       },
     })
 
-    const { JWT_SECRET } = process.env
-
-    const token = jwt.sign({ id: userData.id, email: userData.email }, JWT_SECRET as string, {
+    const token = jwt.sign({ id: userData.id, email: userData.email }, Env.get('APP_KEY'), {
       expiresIn: '15m',
     })
 
@@ -64,9 +63,7 @@ export default class UsersController {
       return response.status(400).json({ message: 'Invalid password' })
     }
 
-    const { JWT_SECRET } = process.env
-
-    const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET as string, {
+    const token = jwt.sign({ id: user.id, email: user.email }, Env.get('APP_KEY'), {
       expiresIn: '15m',
     })
 
