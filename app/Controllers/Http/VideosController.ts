@@ -83,6 +83,7 @@ export default class VideosController {
         .max(200, { message: 'Description must have less than 200 characters' }),
       url: z.string().nonempty({ message: 'URL is required' }).url({ message: 'Invalid URL' }),
       categories: z.array(z.object({ id: z.string() })).optional(),
+      free: z.boolean().optional(),
     })
 
     const videoValidate = videoSchema.parse(request.body())
