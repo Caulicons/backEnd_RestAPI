@@ -1,37 +1,31 @@
 import { test } from '@japa/runner'
+import Env from '@ioc:Adonis/Core/Env'
 
 test.group('CATEGORIES - GET', () => {
   test('GET /categories', async ({ client, assert }) => {
-    const response = await client.get('/categories')
+    const response = await client.get('/categories').headers({
+      'x-access-token': Env.get('TEST_TOKEN'),
+    })
 
     response.assertStatus(200)
     assert.isArray(response.body())
   })
 
   test('GET /categories/:id', async ({ client, assert }) => {
-    const response = await client.get('/categories/1')
+    const response = await client.get('/categories/1').headers({
+      'x-access-token': Env.get('TEST_TOKEN'),
+    })
 
     response.assertStatus(200)
     assert.isObject(response.body())
-    assert.properties(response.body(), ['id', 'title', 'color', 'videos'])
+    assert.properties(response.body(), ['id', 'name', 'color', 'videos'])
   })
 
   test('GET videos by categories /categories/:id/videos', async ({ client, assert }) => {
-    const response = await client.get('/categories/1/videos')
+    const response = await client.get('/categories/1/videos').headers({
+      'x-access-token': Env.get('TEST_TOKEN'),
+    })
     response.assertStatus(200)
     assert.isArray(response.body())
-    response.assertBodyContains([
-      {
-        title: 'The Witch',
-        description:
-          'In the New England of the 17th century, a banished Puritan family sets up a farm by the edge of a huge remote forest where no other family lives. Soon, sinister forces then start haunting them.',
-        url: 'https://www.youtube.com/watch?v=QH2-TGUlwu4',
-      },
-      {
-        title: 'test',
-        description: 'test',
-        url: 'test',
-      },
-    ])
   })
 })

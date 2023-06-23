@@ -6,14 +6,45 @@ const prisma = new PrismaClient()
 
 export default class CategoriesController {
   public async index({ response, request }: HttpContextContract) {
-    const baseUrl = ControllersUtils.getBaseURL()
-    const { page } = request.qs()
-    const skip = (page - 1) * 5
-    const take = 5
+    let { page, ...searchParams } = request.qs()
+
+    for (const [key, value] of Object.entries(searchParams)) {
+      searchParams = {
+        ...searchParams,
+        [key]: {
+          mode: 'insensitive',
+          contains: value,
+        },
+      }
+    }
+
+    if (page) {
+      const baseUrl = ControllersUtils.getBaseURL()
+      const skip = (page - 1) * 5
+      const take = 5
+
+      const categories = await prisma.category.findMany({
+        skip,
+        take,
+        include: {
+          videos: true,
+        },
+      })
+
+      if (!categories.length) return response.status(404).json({ message: 'Categories not found' })
+
+      const previous = skip === 0 ? false : `${baseUrl}/categories/?page=${page - 1}`
+      const next = categories.length < 5 ? false : `${baseUrl}/categories/?page=${Number(page) + 1}`
+
+      return response.status(200).json({
+        categories,
+        previous,
+        next,
+      })
+    }
 
     const categories = await prisma.category.findMany({
-      skip,
-      take,
+      where: { ...searchParams },
       include: {
         videos: true,
       },
@@ -21,14 +52,7 @@ export default class CategoriesController {
 
     if (!categories.length) return response.status(404).json({ message: 'Categories not found' })
 
-    const previous = skip === 0 ? false : `${baseUrl}/categories/?page=${page - 1}`
-    const next = categories.length < 5 ? false : `${baseUrl}/categories/?page=${Number(page) + 1}`
-
-    return response.status(200).json({
-      categories,
-      previous,
-      next,
-    })
+    return response.status(200).json(categories)
   }
 
   public async show({ params, response }: HttpContextContract) {
@@ -73,11 +97,11 @@ export default class CategoriesController {
 
   public async update({ params, request, response }: HttpContextContract) {
     const updatedCategorySchema = z.object({
-      title: z
+      name: z
         .string()
-        .nonempty({ message: 'Title is required' })
-        .min(1, { message: 'Title must have at least one character' })
-        .max(50, { message: 'Title must have less than 50 characters' })
+        .nonempty({ message: 'Name is required' })
+        .min(1, { message: 'Name must have at least one character' })
+        .max(50, { message: 'Name must have less than 50 characters' })
         .optional(),
       color: z
         .string()

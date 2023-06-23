@@ -1,5 +1,6 @@
 import { test } from '@japa/runner'
 import { PrismaClient } from '@prisma/client'
+import Env from '@ioc:Adonis/Core/Env'
 const prisma = new PrismaClient()
 
 test.group('VIDEO - DELETE', () => {
@@ -12,7 +13,9 @@ test.group('VIDEO - DELETE', () => {
       },
     })
 
-    const response = await client.delete(`/videos/${videoToDelete.id}`)
+    const response = await client.delete(`/videos/${videoToDelete.id}`).headers({
+      'x-access-token': Env.get('TEST_TOKEN'),
+    })
 
     response.assertStatus(201)
     response.assertBodyContains({ message: 'Video deleted successfully' })

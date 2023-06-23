@@ -1,16 +1,21 @@
 import { test } from '@japa/runner'
-
+import Env from '@ioc:Adonis/Core/Env'
 import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 test.group('VIDEO - PUT', () => {
   test('PUT /videos/:id', async ({ client }) => {
-    const response = await client.put('/videos/1').json({
-      title: 'Best film in the world ?',
-      description: 'I think no one is better than me',
-      url: 'https://www.youtube.com/watch?v=gpK6uc2yD3w&ab_channel=Bib48_MovieClips',
-      categories: [{ id: '1' }],
-    })
+    const response = await client
+      .put('/videos/1')
+      .json({
+        title: 'Best film in the world ?',
+        description: 'I think no one is better than me',
+        url: 'https://www.youtube.com/watch?v=gpK6uc2yD3w&ab_channel=Bib48_MovieClips',
+        categories: [{ id: '1' }],
+      })
+      .headers({
+        'x-access-token': Env.get('TEST_TOKEN'),
+      })
 
     response.assertStatus(201)
     response.assertBodyContains({

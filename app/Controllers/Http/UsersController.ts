@@ -35,7 +35,7 @@ export default class UsersController {
     })
 
     const token = jwt.sign({ id: userData.id, email: userData.email }, Env.get('APP_KEY'), {
-      expiresIn: '15m',
+      expiresIn: '30m',
     })
 
     const user = { ...userData, token }
@@ -64,7 +64,7 @@ export default class UsersController {
     }
 
     const token = jwt.sign({ id: user.id, email: user.email }, Env.get('APP_KEY'), {
-      expiresIn: '15m',
+      expiresIn: '15y',
     })
 
     const userWithToken = { ...user, token }

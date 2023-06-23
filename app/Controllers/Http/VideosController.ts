@@ -49,9 +49,7 @@ export default class VideosController {
 
     if (!videos.length) return response.status(404).json({ message: 'Video not found' })
 
-    return response.status(200).json({
-      video: videos,
-    })
+    return response.status(200).json(videos)
   }
 
   public async show({ params, response }: HttpContextContract) {
