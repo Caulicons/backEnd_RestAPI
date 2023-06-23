@@ -47,7 +47,6 @@ To see the endpoints API at work, I recommend that use Postman. To help with thi
 As for everywhere request we go made will be necessary the session token, I recommend making a login first on endpoint '/login' and catching the token that has a duration of 30 minutes to use in other requests. You can follow these steps: 
 
 ![cathing token example](./assets/Get token.gif)
-[GIF WITH THE EXAMPLE cathing token]('./assets/Get token.gif')
 
 Now you can make how many requests you want.
 
