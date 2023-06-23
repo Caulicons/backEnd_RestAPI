@@ -117,33 +117,20 @@ export default class VideosController {
         .min(10, { message: 'Description must have at least ten character' })
         .max(200, { message: 'Description must have less than 200 characters' })
         .optional(),
+      free: z.boolean().optional(),
       url: z
         .string()
         .nonempty({ message: 'URL is required' })
         .url({ message: 'Invalid URL' })
         .optional(),
       categories: z
-        .array(z.object({ id: z.string().optional(), title: z.string().optional() }))
+        .array(z.object({ id: z.string().optional(), name: z.string().optional() }))
         .optional(),
     })
 
     const videoValidate = updatedVideoSchema.parse(request.body())
 
-    /*     const customErrorCategories = async () => {
-      if (!videoValidate.categories) return
-
-      const categoryVerification = await Promise.all(
-        videoValidate.categories.map(async (category) => {
-          await prisma.category.findFirstOrThrow({ where: { id: category.id } }).catch(() => {
-            throw new Error(`Category ${category.id} not found`)
-          })
-
-          return { id: category.id }
-        })
-      )
-
-      return categoryVerification
-    } */
+    console.log(videoValidate.categories)
 
     const video = await prisma.movie
       .update({
@@ -154,11 +141,17 @@ export default class VideosController {
             set: videoValidate.categories,
           },
         },
+        include: {
+          categories: true,
+        },
       })
-      .catch((e) => {
-        console.log(e)
-        return response.status(404).json({ message: 'Video not found' })
+      .catch((err) => {
+        console.log(err)
       })
+
+    if (!video) {
+      return response.status(404).json({ message: 'Video not found' })
+    }
 
     return response.status(201).json(video)
   }
@@ -179,6 +172,9 @@ export default class VideosController {
     const freeVideos = await prisma.movie.findMany({
       where: {
         free: true,
+      },
+      include: {
+        categories: true,
       },
     })
 
