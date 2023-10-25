@@ -1,4 +1,4 @@
-# API to movies 🎞️
+# Movies API 🎞️
 
 This is my project created from Alura's first backend challenge. The challenge is to create an API over four weeks where, each week, we receive tasks and business rules that must be fulfilled for the actual work environment simulation.
 
